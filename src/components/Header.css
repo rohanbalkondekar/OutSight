@@ -1,0 +1,21 @@
+/* Header.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Vertically center */
+  align-items: center;
+  /* Horizontally center */
+  height: 100vh;
+  /* This ensures the header takes the full viewport height */
+}
+
+h2 {
+  color: rgba(255, 255, 255, 0.599);
+}
+
+.slogan {
+  background: -webkit-linear-gradient(#eee, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
