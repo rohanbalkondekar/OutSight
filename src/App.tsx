@@ -1,7 +1,6 @@
 import './App.css'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import Gallary from './components/Gallary'
 
 function App() {
 
@@ -9,7 +8,6 @@ function App() {
     <>
       <Header/>
       <Hero/>
-      {/* <Gallary/> */}
     </>
   )
 }
