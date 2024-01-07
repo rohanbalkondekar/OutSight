@@ -2,6 +2,7 @@ import './App.css'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Action from './components/Action'
+import Design from './components/Design'
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <Header/>
       <Hero/>
       <Action/>
+      <Design/>
     </>
   )
 }
