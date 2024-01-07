@@ -1,5 +1,57 @@
-#root {
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
 }
 
+.spline-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 600px;
+  height: 600px;
+  background: transparent;
+  z-index: 1; 
+} */
+
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 10px; /* Add some padding for small screens */
+}
+
+.spline-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 80vw; /* Using viewport width for responsiveness */
+  height: 80vh; /* Using viewport height for responsiveness */
+  background: transparent;
+  z-index: 1;
+  max-width: 600px; /* Max width for large screens */
+  max-height: 600px; /* Max height for large screens */
+}
+
+/* Media Queries */
+
+/* For tablets */
+@media (max-width: 768px) {
+  .spline-container {
+    width: 80vw;
+    height: 80vh;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+  .spline-container {
+    position: relative; /* Change position for mobile */
+    width: 90vw;
+    height: 50vh;
+    margin: 20px auto;
+    top: 0;
+    right: 0;
+  }
+}

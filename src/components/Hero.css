@@ -8,6 +8,7 @@ h2 {
   max-width: 600px;
   text-align: left;
   display: block;
+  z-index: 2; 
 }
 
 .slogan {
@@ -21,8 +22,10 @@ h2 {
   text-transform: uppercase;
   letter-spacing: -2px;
   padding-top: 5rem;
+  z-index: 2; 
 }
 
 .subheading {
   max-width: 400px;
+  z-index: 2; 
 }
