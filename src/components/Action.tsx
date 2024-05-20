@@ -35,4 +35,4 @@ const EmailForm: React.FC<EmailFormProps> = ({ onSubmit }) => {
   );
 };
 
-export default EmailForm; 
+export default EmailForm;
