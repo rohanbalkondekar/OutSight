@@ -5,7 +5,7 @@ h2 {
 }
 
 .hero-container {
-  max-width: 600px;
+  max-width: 1100px;
   text-align: left;
   display: block;
   z-index: 2; 
@@ -26,6 +26,6 @@ h2 {
 }
 
 .subheading {
-  max-width: 400px;
+  /* max-width: 400px; */
   z-index: 2; 
 }

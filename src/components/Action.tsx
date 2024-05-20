@@ -1,25 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Action.css';
 
-type ActionButtonProps = {
-  text: string;
-  className: string;
-};
+interface EmailFormProps {
+  onSubmit: (email: string) => void;
+}
 
-const ActionButton: React.FC<ActionButtonProps> = ({ text, className }) => (
-  <button className={className}>
-    {text}
-    <span className="arrow"></span>
-  </button>
-);
+const EmailForm: React.FC<EmailFormProps> = ({ onSubmit }) => {
+  const [email, setEmail] = useState('');
 
-const Action: React.FC = () => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(email);
+    setEmail('');
+  };
+
   return (
-    <div className="hero-container">
-      <ActionButton text="Get started" className="button get-started" />
-      <ActionButton text="Contact sales" className="button contact-sales" />
-    </div>
+    <form onSubmit={handleSubmit} className="email-form">
+      <input
+        type="email"
+        value={email}
+        onChange={handleEmailChange}
+        placeholder="Enter your email"
+        className="email-input"
+        required
+      />
+      <button type="submit" className="submit-btn">
+        Submit
+      </button>
+    </form>
   );
 };
 
-export default Action;
+export default EmailForm; 

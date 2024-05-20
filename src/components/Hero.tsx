@@ -3,8 +3,9 @@ import './Hero.css';
 const Hero = () => {
   return (
     <div className="hero-container">
-      <h2 className='slogan'>Out of the Box Insights for Your Business</h2>
-      <h4 className='subheading'>We Help Your Businesses to harness the power of AI to make Better Business Decissions on Every Step of the Way</h4>
+      <h2 className='slogan'>We Are Building Next Generation AI Consultants!</h2>
+      <h4 className='subheading'>Are you interested in hiring future team members who for you can work 24/7 for you?</h4>
+      <h4 className='subheading'>Signup For Free Early Access!</h4>
     </div>
   );
 };
