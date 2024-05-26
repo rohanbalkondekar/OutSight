@@ -34,10 +34,10 @@ export const GoogleGeminiEffect = ({
       </p>
       <p className="text-xs md:text-xl font-normal text-center text-neutral-400 mt-4 max-w-lg mx-auto">
         {description ||
-          `Are you interested in hiring future team members who for you can work 24/7 for you? `}
+          `Are you interested in hiring future team members who can work 24/7 for you? `}
       </p>
       <div className="w-full h-[890px] -top-60 md:-top-40  flex items-center justify-center bg-red-transparent absolute ">
-      <button
+        <button
           onClick={handleButtonClick}
           className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-32 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto "
         >

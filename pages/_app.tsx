@@ -5,11 +5,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="shortcut icon" href="/robot_flat.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />
     </>
-  );  
+  );
 }
 
 export default MyApp;
