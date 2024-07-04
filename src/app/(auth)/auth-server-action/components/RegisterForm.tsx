@@ -144,7 +144,7 @@ export default function RegisterForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="register_btn">
+				<Button type="submit" className="button">
 					Register
 					<AiOutlineLoading3Quarters className={cn("animate-spin", {hidden: !isPending})} />
 				</Button>

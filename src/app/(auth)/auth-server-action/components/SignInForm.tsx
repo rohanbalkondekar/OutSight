@@ -124,7 +124,7 @@ export default function SignInForm() {
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="register_btn">
+				<Button type="submit" className="button">
 					SignIn
 					<AiOutlineLoading3Quarters className={cn("animate-spin", {hidden: !isPending})} />
 				</Button>

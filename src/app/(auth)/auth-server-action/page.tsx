@@ -8,7 +8,7 @@ export default async function page() {
 	const{data} = await readUserSession();
 
 	if(data.session){
-		return redirect("/")
+		return redirect("/migrate")
 	}
 	return (
 		<div className="flex justify-center items-center h-screen">
