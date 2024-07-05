@@ -18,5 +18,5 @@ export default function OAuthForm() {
 			}
 		})
 	}
-	return <Button onClick={loginWithGithub} className="register_btn">Login With Github</Button>;
+	return <Button onClick={loginWithGithub} className="button">Login With Github</Button>;
 }
