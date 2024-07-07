@@ -18,5 +18,9 @@ export default function OAuthForm() {
 			}
 		})
 	}
-	return <Button onClick={loginWithGithub} className="button">Login With Github</Button>;
+	return (
+		<div className="flex justify-center items-center">
+			<Button onClick={loginWithGithub} className="button">Login With Github</Button>
+		</div>
+	);
 }
