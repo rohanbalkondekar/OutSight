@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { runAgent } from '../api/apiMethod'; // Adjust the import based on your project structure
+import LogStream from '../components/LogStream';
 
 const models = ["gpt-3.5-turbo", "GPT-4", "Gemini"]; // Add more models as needed
 
@@ -35,16 +36,15 @@ const MigrationAgent: React.FC = () => {
 
   const handleRunAgent = async () => {
     try {
-      const response = await runAgent({
+      await runAgent({
         model: selectedModel,
         inputPath: sourcePath,
         outputPath: outputPath,
-        legacyCodeName:legacyCodeName,
-        legacyFrameworkName:legacyFrameworkName,
+        legacyCodeName: legacyCodeName,
+        legacyFrameworkName: legacyFrameworkName,
       });
-      setLogs([...logs, `Agent run successfully: ${response.message}`]);
-    } catch (error:any) {
-      setLogs([...logs, `Error running agent: ${error.message}`]);
+    } catch (error: any) {
+      setLogs((prevLogs) => [...prevLogs, `Error running agent: ${error.message}`]);
     }
   };
 
@@ -117,6 +117,7 @@ const MigrationAgent: React.FC = () => {
               {log}
             </p>
           ))}
+            <LogStream endpoint="http://localhost:8000/agent/stream_logs" />
         </div>
       </div>
     </div>
