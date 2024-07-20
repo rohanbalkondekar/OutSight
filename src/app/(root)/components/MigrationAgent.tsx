@@ -83,7 +83,7 @@ const MigrationAgent: React.FC = () => {
           </select>
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Source Code Path</label>
+          <label className="block text-sm font-medium text-gray-700">Entry Path</label>
           <input
             name="entry_path"
             type="text"
@@ -103,7 +103,7 @@ const MigrationAgent: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Name of Legacy Code</label>
+          <label className="block text-sm font-medium text-gray-700">Legacy Language</label>
           <input
             name="legacy_language"
             type="text"
@@ -113,11 +113,32 @@ const MigrationAgent: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Name of Legacy Framework</label>
+          <label className="block text-sm font-medium text-gray-700">Legacy Framework</label>
           <input
             name="legacy_framework"
             type="text"
             value={formState.legacy_framework}
+            onChange={handleChange}
+            className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">New Language</label>
+          <input
+            name="new_language"
+            type="text"
+            value={formState.new_language}
+            onChange={handleChange}
+            className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
+          />
+        </div>
+        
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">New Framework</label>
+          <input
+            name="new_framework"
+            type="text"
+            value={formState.new_framework}
             onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
