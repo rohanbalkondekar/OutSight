@@ -3,45 +3,60 @@
 import { useState } from 'react';
 import { runAgent } from '../api/apiMethod'; // Adjust the import based on your project structure
 import LogStream from '../components/LogStream';
+import { AgentRequest } from '../../../../models/request';
+const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo (deprecated)", "gpt-3.5-turbo (deprecated)"]; // Add more models as needed
 
-const models = ["gpt-3.5-turbo", "GPT-4", "Gemini"]; // Add more models as needed
+const initialState: AgentRequest = {
+  document: { model: { name: models[0] }, rerun: false },
+  planner: { model: { name: models[0] }, rerun: false },
+  migrate: { model: { name: models[0] }, rerun: false },
+  entry_path: '',
+  output_path: '',
+  legacy_language: '',
+  legacy_framework: '',
+  new_language: '',
+  new_framework: '',
+};
+
+const setNestedProperty = (obj: any, path: string[], value: any) => {
+  const lastKeyIndex = path.length - 1;
+  for (let i = 0; i < lastKeyIndex; ++i) {
+    const key = path[i];
+    if (!(key in obj)) {
+      obj[key] = {};
+    }
+    obj = obj[key];
+  }
+  obj[path[lastKeyIndex]] = value;
+};
 
 const MigrationAgent: React.FC = () => {
-  const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo"); // Default to "GPT-3.5"
-  const [sourcePath, setSourcePath] = useState('/Users/anugrahkuantanu/Desktop/migrate_agent/input/mern-admin');
-  const [outputPath, setOutputPath] = useState('/Users/anugrahkuantanu/Desktop/migrate_agent/output');
-  const [legacyCodeName, setLegacyCodeName] = useState('nodeJs');
-  const [legacyFrameworkName, setLegacyFrameworkName] = useState('express.js');
+  const [formState, setFormState] = useState<AgentRequest>(initialState);
   const [logs, setLogs] = useState<string[]>([]);
 
-  const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedModel(event.target.value);
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    const keys = name.split('.');
 
-  const handleSourcePathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSourcePath(event.target.value);
+    setFormState(prevState => {
+      const updatedState = { ...prevState };
+      setNestedProperty(updatedState, keys, value);
+      return updatedState;
+    });
   };
-
-  const handleOutputPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOutputPath(event.target.value);
-  };
-
-  const handleLegacyCodeNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLegacyCodeName(event.target.value);
-  };
-
-  const handleLegacyFrameworkNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLegacyFrameworkName(event.target.value);
-  };
-
+  
   const handleRunAgent = async () => {
     try {
       await runAgent({
-        model: selectedModel,
-        inputPath: sourcePath,
-        outputPath: outputPath,
-        legacyCodeName: legacyCodeName,
-        legacyFrameworkName: legacyFrameworkName,
+        document: formState.document,
+        planner: formState.planner,
+        migrate: formState.migrate,
+        entry_path: formState.entry_path,
+        output_path: formState.output_path,
+        legacy_language: formState.legacy_language,
+        legacy_framework: formState.legacy_framework,
+        new_language: formState.new_language,
+        new_framework: formState.new_framework
       });
     } catch (error: any) {
       setLogs((prevLogs) => [...prevLogs, `Error running agent: ${error.message}`]);
@@ -55,8 +70,9 @@ const MigrationAgent: React.FC = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Select GPT Model</label>
           <select
-            value={selectedModel}
-            onChange={handleModelChange}
+            name="document.model.name"
+            value={formState.document.model.name}
+            onChange={handleChange}
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
           >
             {models.map((model) => (
@@ -69,36 +85,40 @@ const MigrationAgent: React.FC = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Source Code Path</label>
           <input
+            name="entry_path"
             type="text"
-            value={sourcePath}
-            onChange={handleSourcePathChange}
+            value={formState.entry_path}
+            onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Output Path</label>
           <input
+            name="output_path"
             type="text"
-            value={outputPath}
-            onChange={handleOutputPathChange}
+            value={formState.output_path}
+            onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Name of Legacy Code</label>
           <input
+            name="legacy_language"
             type="text"
-            value={legacyCodeName}
-            onChange={handleLegacyCodeNameChange}
+            value={formState.legacy_language}
+            onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">Name of Legacy Framework</label>
           <input
+            name="legacy_framework"
             type="text"
-            value={legacyFrameworkName}
-            onChange={handleLegacyFrameworkNameChange}
+            value={formState.legacy_framework}
+            onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
         </div>

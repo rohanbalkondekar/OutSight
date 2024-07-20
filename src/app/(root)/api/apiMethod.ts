@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getCurrentUser } from '../../../../lib/actions/index';
-import { AgentModel } from '../../../../models/agent';
+import { AgentRequest } from '../../../../models/request';
 import { headers } from 'next/headers';
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -75,7 +75,7 @@ export async function deleteData(endpoint:string) {
     return response.data;
 }
 
-export async function runAgent(agentData: AgentModel) {
+export async function runAgent(agentData: AgentRequest) {
   const { token } = await getCurrentUser();
 
   if (!token) {
