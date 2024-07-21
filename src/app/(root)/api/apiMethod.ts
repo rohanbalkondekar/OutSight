@@ -75,18 +75,25 @@ export async function deleteData(endpoint:string) {
     return response.data;
 }
 
+// export async function runAgent(agentData: AgentRequest) {
+//   const { token } = await getCurrentUser();
+
+//   if (!token) {
+//     throw new Error('User not authenticated');
+//   }
+
+//   const response = await axios.post('${API_BASE_URL}/agent/run_agent', agentData, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   return response.data;
+// }
+
+
 export async function runAgent(agentData: AgentRequest) {
-  const { token } = await getCurrentUser();
+  const response = await postData(agentData, "agent/run_agent")
 
-  if (!token) {
-    throw new Error('User not authenticated');
-  }
-
-  const response = await axios.post('http://localhost:8000/agent/run_agent', agentData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+  return response.data
 }
