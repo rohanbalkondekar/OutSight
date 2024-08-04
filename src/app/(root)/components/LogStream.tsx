@@ -1,5 +1,6 @@
 // components/LogStream.tsx
 import { useEffect, useState } from 'react';
+import { getCurrentUser } from '../../../../lib/actions';
 
 interface LogStreamProps {
   endpoint: string;
@@ -7,9 +8,32 @@ interface LogStreamProps {
 
 const LogStream: React.FC<LogStreamProps> = ({ endpoint }) => {
   const [logs, setLogs] = useState<string[]>([]);
+  const [token, setToken] = useState<string>(''); 
 
+  // Effect to fetch the token
   useEffect(() => {
-    const eventSource = new EventSource(endpoint);
+    const fetchToken = async () => {
+      try {
+        const { token } = await getCurrentUser();
+        if (token) {
+          setToken(token);
+        } else {
+          console.error('No token received');
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    };
+
+    fetchToken();
+  }, []); 
+
+  
+  useEffect(() => {
+    if (!token) return; 
+
+    const authEndpoint = `${endpoint}?token=${encodeURIComponent(token)}`;
+    const eventSource = new EventSource(authEndpoint);
 
     eventSource.onmessage = (event) => {
       setLogs((prevLogs) => [...prevLogs, event.data]);
@@ -21,9 +45,10 @@ const LogStream: React.FC<LogStreamProps> = ({ endpoint }) => {
     };
 
     return () => {
+      console.log('Closing EventSource');
       eventSource.close();
     };
-  }, [endpoint]);
+  }, [token, endpoint]); // This effect depends on `token` and `endpoint`
 
   return (
     <div>

@@ -1,20 +1,23 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { runAgent } from '../api/apiMethod'; // Adjust the import based on your project structure
 import LogStream from '../components/LogStream';
 import { AgentRequest } from '../../../../models/request';
+import { getCurrentUser } from '../../../../lib/actions';
+
+
 const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo (deprecated)", "gpt-3.5-turbo (deprecated)"]; // Add more models as needed
 
 const initialState: AgentRequest = {
   document: { model: { name: models[0] }, rerun: false },
   planner: { model: { name: models[0] }, rerun: false },
   migrate: { model: { name: models[0] }, rerun: false },
-  entry_path: '',
-  output_path: '',
-  legacy_language: '',
-  legacy_framework: '',
-  new_language: '',
+  entry_path: '/home/mo/Desktop/example/user_1/input/mern-admin',
+  output_path: '/home/mo/Desktop/example/user_1/output',
+  legacy_language: 'nodeJs',
+  legacy_framework: 'express.js',
+  new_language: 'rust',
   new_framework: '',
 };
 
@@ -33,6 +36,7 @@ const setNestedProperty = (obj: any, path: string[], value: any) => {
 const MigrationAgent: React.FC = () => {
   const [formState, setFormState] = useState<AgentRequest>(initialState);
   const [logs, setLogs] = useState<string[]>([]);
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -158,7 +162,7 @@ const MigrationAgent: React.FC = () => {
               {log}
             </p>
           ))}
-            <LogStream endpoint="http://localhost:8000/agent/stream_logs" />
+            <LogStream endpoint="http://localhost:8000/agent/stream_logs"/>
         </div>
       </div>
     </div>
