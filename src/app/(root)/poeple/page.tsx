@@ -29,7 +29,7 @@ const founders: Founder[] = [
     company: 'Tesla Data Analyst',
     photoUrl: '/photos/rohan.jpeg',
     companyLogoUrl_1: '/photos/Airarabia.png',
-    companyLogoUrl_2: '/photos/lyzr.webp',
+    companyLogoUrl_2: '/photos/lyzr.svg',
     linkedinUrl: 'https://rohanbalkondekar.com/',
   },
   {
@@ -46,8 +46,8 @@ const founders: Founder[] = [
     name: 'Dwi Anugrah Kuantanu',
     company: 'Tesla Data Analyst',
     photoUrl: '/photos/anugrah.jpg',
-    companyLogoUrl_1: '/photos/tesla.jpg',
-    companyLogoUrl_2: '/photos/bosch.jpeg',
+    companyLogoUrl_1: '/photos/tesla.png',
+    companyLogoUrl_2: '/photos/bosch.png',
     linkedinUrl: 'https://www.kuantanu.com/',
   },
 ];
