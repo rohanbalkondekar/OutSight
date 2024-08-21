@@ -17,7 +17,7 @@ const founders: Founder[] = [
   {
     id: 1,
     name: 'Aman Gokrani',
-    company: 'Microsoft AI Scientist',
+    company: 'AI Scientist',
     photoUrl: '/photos/aman.jpeg',
     companyLogoUrl_1: '/photos/microsoft.png',
     companyLogoUrl_2: '/photos/nuance.png',
@@ -26,7 +26,7 @@ const founders: Founder[] = [
   {
     id: 2,
     name: 'Rohan Balkondekar',
-    company: 'Tesla Data Analyst',
+    company: 'Gen-AI Lead',
     photoUrl: '/photos/rohan.jpeg',
     companyLogoUrl_1: '/photos/airarabia.png',
     companyLogoUrl_2: '/photos/lyzr.svg',
@@ -35,7 +35,7 @@ const founders: Founder[] = [
   {
     id: 3,
     name: 'Shashwat Tiwari',
-    company: 'Tesla Data Analyst',
+    company: 'Product Manager',
     photoUrl: '/photos/shashwat.jpeg',
     companyLogoUrl_1: '/photos/artium.jpg',
     companyLogoUrl_2: '/photos/iauro.jpg',
@@ -44,7 +44,7 @@ const founders: Founder[] = [
   {
     id: 4,
     name: 'Dwi Anugrah Kuantanu',
-    company: 'Tesla Data Analyst',
+    company: 'Fullstack Developer',
     photoUrl: '/photos/anugrah.jpg',
     companyLogoUrl_1: '/photos/tesla.png',
     companyLogoUrl_2: '/photos/bosch.png',
