@@ -54,13 +54,13 @@ export default function SignIn() {
 						Welcome back! Please sign in to continue
 					</p>
 				</div>
-				<Social redirectTo={next || "/migrate"} />
+				<Social redirectTo={next || "/dashboard"} />
 				<div className="flex items-center gap-5">
 					<div className="flex-1 h-[0.5px] w-full bg-zinc-400 dark:bg-zinc-800"></div>
 					<div className="text-sm">or</div>
 					<div className="flex-1 h-[0.5px] w-full bg-zinc-400 dark:bg-zinc-800"></div>
 				</div>
-				<SignInForm redirectTo={next || "/migrate"} />
+				<SignInForm redirectTo={next || "/dashboard"} />
 			</div>
 		</div>
 	);

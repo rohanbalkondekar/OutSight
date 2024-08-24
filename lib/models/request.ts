@@ -6,6 +6,7 @@ export interface AgentParams {
 }
 
 export interface AgentRequest {
+  project_id: string;
   document: AgentParams;
   planner: AgentParams;
   migrate: AgentParams;

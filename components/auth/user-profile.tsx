@@ -15,6 +15,8 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import useUser from "@/app/(auth)/hook/useUser";
 import ManageProfile from "./manage-profile";
 import Avatar from "./avatar";
+import { cookies } from "next/headers";
+
 
 export default function UserProfile() {
 	const [isSignOut, startSignOut] = useTransition();
@@ -24,10 +26,20 @@ export default function UserProfile() {
 	const signout = () => {
 		startSignOut(async () => {
 			const supabase = createSupabaseBrowser();
-			await supabase.auth.signOut();
-			router.push("/signin");
+			const {error} = await supabase.auth.signOut();
+
+			if (error) {
+				console.error('Error signing out:', error.message);
+			  } else {
+				// Clear local storage or cookies
+				localStorage.removeItem('supabase.auth.token');
+				document.cookie = 'supabase.auth.token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+				router.push("/signin");
+			  }
 		});
 	};
+
+
 
 	return (
 		<div className="w-full">

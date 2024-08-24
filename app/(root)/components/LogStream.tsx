@@ -1,5 +1,5 @@
 // components/LogStream.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getCurrentUser } from '@/lib/actions';
 
 interface LogStreamProps {
@@ -9,6 +9,7 @@ interface LogStreamProps {
 const LogStream: React.FC<LogStreamProps> = ({ endpoint }) => {
   const [logs, setLogs] = useState<string[]>([]);
   const [token, setToken] = useState<string>(''); 
+  const logContainerRef = useRef<HTMLDivElement>(null); // Reference for the log container
 
   // Effect to fetch the token
   useEffect(() => {
@@ -28,7 +29,7 @@ const LogStream: React.FC<LogStreamProps> = ({ endpoint }) => {
     fetchToken();
   }, []); 
 
-  
+  // Effect to handle log streaming
   useEffect(() => {
     if (!token) return; 
 
@@ -48,13 +49,28 @@ const LogStream: React.FC<LogStreamProps> = ({ endpoint }) => {
       console.log('Closing EventSource');
       eventSource.close();
     };
-  }, [token, endpoint]); // This effect depends on `token` and `endpoint`
+  }, [token, endpoint]); 
+
+  // Effect to automatically scroll to the bottom when new logs are added
+  useEffect(() => {
+    if (logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+    }
+  }, [logs]);
 
   return (
-    <div>
-      <ul className="text-sm text-gray-800">
+    <div
+      ref={logContainerRef}
+      className="h-1/2 border border-gray-300 p-4 rounded-md overflow-y-scroll bg-gray-100"
+    >
+      <ul className="space-y-2">
         {logs.map((log, index) => (
-          <li key={index}>{log}</li>
+          <li 
+            key={index} 
+            className="w-fit bg-gray-200 px-4 py-2 rounded-lg shadow-sm text-sm text-gray-800 break-words max-w-full"
+          >
+            {log}
+          </li>
         ))}
       </ul>
     </div>

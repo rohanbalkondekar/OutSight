@@ -23,8 +23,8 @@ export async function postData(Data: any, endpoint:string) {
 }
 
 // Function to get jobs for the current user
-export async function getData(endpoint:string) {
-  const { token } = await getCurrentUser();
+export async function getData(endpoint:string, token:any) {
+  // const { token } = await getCurrentUser();
 
   if (!token) {
     throw new Error('User not authenticated');
