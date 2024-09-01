@@ -43,16 +43,16 @@ const ProjectMigration: React.FC<{ project: AgentRequest }> = ({ project }) => {
   };
 
   return (
-      <div className="max-h-[960px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
+      <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
         <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
         
         {/* Project ID */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Project ID</label>
           <input
-            name="project_id"
+            name="thread_id"
             type="text"
-            value={formState.project_id}
+            value={formState.thread_id}
             onChange={handleChange}
             className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
           />

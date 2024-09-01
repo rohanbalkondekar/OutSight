@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]; // Add more models as needed
 
 const initialState: AgentRequest = {
-  project_id: "",
+  thread_id: "",
   document: { model: { name: models[0] }, rerun: false },
   planner: { model: { name: models[0] }, rerun: false },
   migrate: { model: { name: models[0] }, rerun: false },
@@ -60,7 +60,7 @@ const NewProject: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row p-4 h-screen items-center justify-center">
+    <div className="flex flex-col md:flex-row p-4 max-h-[960px] items-center justify-center">
       <div className="md:w-1/3 p-4 bg-gray-700 rounded-md shadow-md">
         <h1 className="text-2xl font-bold mb-4 text-white">Create New Project</h1>
 
@@ -68,9 +68,9 @@ const NewProject: React.FC = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-white">Project ID</label>
           <input
-            name="project_id"
+            name="thread_id"
             type="text"
-            value={formState.project_id}
+            value={formState.thread_id}
             onChange={handleChange}
             className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
           />
