@@ -8,6 +8,7 @@ import { getCurrentUser } from '@/lib/actions';
 import { redirect, useRouter } from 'next/navigation';
 import UserProfile from '@/components/auth/user-profile';
 import { FaPlus, FaGithub } from 'react-icons/fa'; // Add icons
+import { string } from 'zod';
 
 export interface Project {
   id: number;
@@ -28,6 +29,8 @@ const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+
 
   const fetchProjects = async () => {
     try {

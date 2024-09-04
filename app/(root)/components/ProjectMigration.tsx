@@ -6,6 +6,10 @@ import { AgentRequest } from '@/lib/models/request';
 import { FaGithub } from 'react-icons/fa'; // Import GitHub icon
 
 const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]; // Add more models as needed
+const languages = ["", "NodeJs","Python", "JavaScript", "TypeScript", "Java", "C#"];
+const frameworks = ["", "Express.js", "FastApi", "Django", "React", "Angular", "Spring", "ASP.NET"];
+
+
 
 const setNestedProperty = (obj: any, path: string[], value: any) => {
   const lastKeyIndex = path.length - 1;
@@ -19,7 +23,8 @@ const setNestedProperty = (obj: any, path: string[], value: any) => {
   obj[path[lastKeyIndex]] = value;
 };
 
-const ProjectMigration: React.FC<{ project: AgentRequest }> = ({ project }) => {
+
+const ProjectMigration: React.FC<{ project: AgentRequest, onHandleIsRunAgent: (show: boolean) => void }> = ({ project, onHandleIsRunAgent }) => {
   const [formState, setFormState] = useState<AgentRequest>(project);
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -36,123 +41,86 @@ const ProjectMigration: React.FC<{ project: AgentRequest }> = ({ project }) => {
 
   const handleRunAgent = async () => {
     try {
+      onHandleIsRunAgent(true);
       await runAgent(formState); 
     } catch (error: any) {
       setLogs((prevLogs) => [...prevLogs, `Error running agent: ${error.message}`]);
     }
   };
 
+    const formFields = [
+    {
+      label: 'Select Document Model',
+      name: 'document.model.name',
+      options: models,
+      value: formState.document.model.name,
+    },
+    {
+      label: 'Select Planner Model',
+      name: 'planner.model.name',
+      options: models,
+      value: formState.planner.model.name,
+    },
+    {
+      label: 'Select Migrate Model',
+      name: 'migrate.model.name',
+      options: models,
+      value: formState.migrate.model.name,
+    },
+    {
+      label: 'Select Directory Structure Model',
+      name: 'dir_struct.model.name',
+      options: models,
+      value: formState.dir_struct.model.name,
+    },
+    {
+      label: 'Legacy Language',
+      name: 'legacy_language',
+      options: languages,
+      value: formState.legacy_language,
+    },
+    {
+      label: 'Legacy Framework',
+      name: 'legacy_framework',
+      options: frameworks,
+      value: formState.legacy_framework,
+    },
+    {
+      label: 'New Language',
+      name: 'new_language',
+      options: languages,
+      value: formState.new_language,
+    },
+    {
+      label: 'New Framework',
+      name: 'new_framework',
+      options: frameworks,
+      value: formState.new_framework,
+    },
+  ];
+
+
   return (
       <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
         <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
         
-        {/* Project ID */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Project ID</label>
-          <input
-            name="thread_id"
-            type="text"
-            value={formState.thread_id}
-            onChange={handleChange}
-            className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-          />
-        </div>
-
-        {/* Model Selection for each step */}
-        {['document', 'planner', 'migrate', 'dir_struct'].map((step) => (
-          <div className="mb-4" key={step}>
-            <label className="block text-sm font-medium">Select GPT Model for {step.charAt(0).toUpperCase() + step.slice(1)}</label>
+        {formFields.map((field) => (
+          <div className="mb-4" key={field.name}>
+            <label className="block text-sm font-medium text-white">{field.label}</label>
             <select
-              name={`${step}.model.name`}
-              value={(formState as any)[step]?.model?.name || ''}
+              name={field.name}
+              value={field.value}
               onChange={handleChange}
-              className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
             >
-              {models.map((model) => (
-                <option key={model} value={model}>
-                  {model}
+              {field.options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
             </select>
           </div>
         ))}
-
-        {/* Entry Path with GitHub icon inside the input */}
-        <div className="mb-4 relative">
-          <label className="block text-sm font-medium">Entry Path</label>
-          <div className="relative flex items-center">
-            <FaGithub className="absolute left-3 text-gray-700 w-6 h-6" />
-            <input
-              name="entry_path"
-              type="text"
-              value={formState.entry_path}
-              onChange={handleChange}
-              className="mt-1 block w-full pl-12 bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-            />
-          </div>
-        </div>
-
-        {/* Output Path with GitHub icon inside the input */}
-        <div className="mb-4 relative">
-          <label className="block text-sm font-medium">Output Path</label>
-          <div className="relative flex items-center">
-            <FaGithub className="absolute left-3 text-gray-700 w-6 h-6" />
-            <input
-              name="output_path"
-              type="text"
-              value={formState.output_path}
-              onChange={handleChange}
-              className="mt-1 block w-full pl-12 bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-            />
-          </div>
-        </div>
-
-        {/* Legacy Language */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Legacy Language</label>
-          <input
-            name="legacy_language"
-            type="text"
-            value={formState.legacy_language}
-            onChange={handleChange}
-            className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-          />
-      </div>
-        {/* Legacy Framework */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Legacy Framework</label>
-          <input
-            name="legacy_framework"
-            type="text"
-            value={formState.legacy_framework}
-            onChange={handleChange}
-            className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-          />
-        </div>
-
-        {/* New Language */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">New Language</label>
-          <input
-            name="new_language"
-            type="text"
-            value={formState.new_language}
-            onChange={handleChange}
-            className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-          />
-        </div>
-
-        {/* New Framework */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">New Framework</label>
-          <input
-            name="new_framework"
-            type="text"
-            value={formState.new_framework}
-            onChange={handleChange}
-            className="mt-1 block w-full bg-white text-black shadow-sm sm:text-sm border-gray-300 rounded-md p-2"
-          />
-        </div>
 
         {/* Submit Button */}
         <button onClick={handleRunAgent} className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition">

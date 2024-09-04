@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Project } from '../../../dashboard/page';
 import { getData } from '../../../api/apiMethod';
 import ProjectMigration from '../../../components/ProjectMigration';
-import Leftbar from '@/app/(root)/components/Leftbar';
+import Topbar from '@/app/(root)/components/Topbar';
 import { getCurrentUser } from '@/lib/actions';
-import LogStream from '@/app/(root)/components/LogStream';
-import ChatWindows from '@/app/(root)/components/ChatWindow';
+import FolderTree from '@/app/(root)/components/FolderTree';
+import ChatWebsocket from '@/app/(root)/components/ChatWebsocket';
 
 interface ProjectPageProps {
   params: {
@@ -21,6 +21,12 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAgentRun, setIsAgentRun] = useState<boolean>(false);
+
+  const handleIsRunAgent = (show: boolean) => {
+    setIsAgentRun(show);
+  }
+
   const router = useRouter();
   
   useEffect(() => {
@@ -44,10 +50,10 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
     fetchData();
   }, [id, router]);
 
-  const leftbarLinks = [
+  const topbarLinks = [
     { href: "/dashboard", label: 'Dashboard' },
+    // { href: `/projects/${id}/setup`, label: 'Setup' },
     { href: `/projects/${id}/migrate`, label: 'Code Migration' },
-    { href: `/projects/${id}/terminal`, label: 'Terminal' },
   ];
 
   if (loading) {
@@ -63,17 +69,20 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   }
 
   return (
-    <div className="flex">
-      <Leftbar links={leftbarLinks} />
+    <div>
+      <Topbar links={topbarLinks} />
       <div className="flex-1 flex flex-col items-center p-4 lg:flex-row">
       <div className="flex-1 flex justify-center items-center lg:w-1/3 h-screen overflow-auto">
-        <ProjectMigration project={project} />
+        <ProjectMigration project={project} onHandleIsRunAgent={handleIsRunAgent}/>
       </div>
 
         <div className="flex-2 p-4 lg:w-2/3">
-          <h2 className="text-2xl font-bold mb-4 text-white">Agent Logs</h2>
-          <ChatWindows endpoint="http://localhost:8000/agent/stream_logs" />
-          {/* <LogStream endpoint="http://localhost:8000/agent/stream_logs" /> */}
+        {!isAgentRun ? (
+          <FolderTree project={project}/>
+        ):(
+          <ChatWebsocket endpoint="http://localhost:8000/agent/ws/chat"/>
+        )}
+          
         </div>
       </div>
     </div>

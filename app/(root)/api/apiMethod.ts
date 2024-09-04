@@ -41,6 +41,24 @@ export async function getData(endpoint:string, token:any) {
   return response.data;
 }
 
+export async function getDataFolder(endpoint: string, token: any, inputPath: string) {
+  if (!token) {
+    throw new Error('User not authenticated');
+  }
+
+  // Encode the inputPath to ensure it's safely passed in the URL
+  const encodedInputPath = encodeURIComponent(inputPath);
+
+  const response = await axios.get(`${API_BASE_URL}/${endpoint}/?input_path=${encodedInputPath}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response;
+}
+
+
 
 
 export async function putData(data:any, endpoint:string) {
