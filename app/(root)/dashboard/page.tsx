@@ -8,7 +8,6 @@ import { getCurrentUser } from '@/lib/actions';
 import { redirect, useRouter } from 'next/navigation';
 import UserProfile from '@/components/auth/user-profile';
 import { FaPlus, FaGithub } from 'react-icons/fa'; // Add icons
-import { string } from 'zod';
 
 export interface Project {
   id: number;

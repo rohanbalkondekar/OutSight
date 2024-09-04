@@ -85,3 +85,17 @@
 	background: black;
 	}
 
+/* Add this to your CSS file */
+.tree-node {
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.tree-node:hover {
+    background-color: #3a3f47;
+}
+
+.tree-node.selected {
+    background-color: #31363f;
+}
