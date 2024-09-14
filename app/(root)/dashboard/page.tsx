@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
               <div className="flex-shrink-0 bg-gray-100 p-3 rounded-full shadow-md">
                 <FaGithub className="text-gray-600 w-8 h-8" /> {/* Replace with your logo */}
               </div>
-              <div className="text-left flex-grow">
+              <div className="text-left flex-grow text-ellipsis overflow-hidden ">
                 <h2 className="text-xl font-bold mb-2 text-gray-800">Project ID: {project.thread_id}</h2>
                 <p className="text-sm text-gray-600 mb-1"><strong>Legacy Language:</strong> {project.legacy_language}</p>
                 <p className="text-sm text-gray-600 mb-1"><strong>Legacy Framework:</strong> {project.legacy_framework}</p>
