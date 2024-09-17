@@ -39,7 +39,7 @@ const ChatWebsocket: React.FC<ChatWebsocketProps> = ({ endpoint }) => {
       try {
         const parse_data = JSON.parse(event.data);
         const splitMessages = parse_data
-          .split(/\n\n|\n/)
+          .split(/\n\n/)
           .filter((message: string) => message.trim().length > 0);
 
         setLogs((prevLogs) => [
@@ -84,19 +84,65 @@ const ChatWebsocket: React.FC<ChatWebsocketProps> = ({ endpoint }) => {
     }
   };
 
-  const renderMessageWithBold = (message: string) => {
-    const parts = message.split(/(\*\*[^*]+\*\*)/g);
-
+  const renderMessageWithBoldUnderlineCodeAndBackticks = (message: string) => {
+    // Split by code blocks (```bash, ```js, etc.)
+    const parts = message.split(/(```[\s\S]*?```)/g);
+  
     return parts.map((part, index) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={index}>{part.slice(2, -2)}</strong>;
+      if (part.startsWith('```') && part.endsWith('```')) {
+        // Extract the content inside the code block, removing ```bash or ```js, etc.
+        const codeContent = part.slice(3, -3).trim(); // Remove the surrounding ```
+        const firstLine = codeContent.split('\n')[0]; // First line (could contain the language)
+        const language = firstLine.match(/^bash|js|javascript|python/) ? firstLine : null;
+        const code = language ? codeContent.split('\n').slice(1).join('\n') : codeContent; // Skip the first line if it's a language identifier
+  
+        return (
+          <pre key={index} className="bg-gray-800 text-white p-2 rounded-md">
+            <code>
+              {language && <div className="text-xs text-gray-400">{language}</div>}
+              {code}
+            </code>
+          </pre>
+        );
       }
-      return part;
+  
+      // If it's not a code block, apply bold, underline, and backtick formatting
+      const formattedParts = part.split(/(\*\*[^*]+\*\*|###.+?###|`[^`]+`|^#{1,2}\s.+$)/gm);
+      return formattedParts.map((subPart, subIndex) => {
+        if (subPart.startsWith('**') && subPart.endsWith('**')) {
+          // Bold text (surrounded by **)
+          return <strong key={`${index}-${subIndex}`}>{subPart.slice(2, -2)}</strong>;
+        } else if (subPart.startsWith('###') || subPart.endsWith('###')) {
+          // Underline text (surrounded by ###)
+          return <strong key={`${index}-${subIndex}`}>{subPart.slice(3)}</strong>;
+        } else if (subPart.startsWith('`') && subPart.endsWith('`')) {
+          // Bold text inside backticks (surrounded by `)
+          return <strong key={`${index}-${subIndex}`}>{subPart.slice(1, -1)}</strong>;
+        } else if (subPart.startsWith('##')) {
+          // Bold and Underline text starting with # or ##
+          return (
+            <strong key={`${index}-${subIndex}`}>
+              <u>{subPart.slice(2)}</u>
+            </strong>
+          );
+        }else if (subPart.startsWith('#')) {
+          // Bold and Underline text starting with # or ##
+          return (
+            <strong key={`${index}-${subIndex}`}>
+              <u>{subPart.slice(1)}</u>
+            </strong>
+          );
+        }
+        // Regular text
+        return subPart;
+      });
     });
   };
+  
+    
 
   return (
-    <div className="flex flex-col h-[760px] border border-gray-300 p-4 rounded-md bg-gray-100">
+    <div className="flex flex-col h-[700px] border border-gray-300 p-2 rounded-md bg-gray-100">
       <div
         ref={logContainerRef}
         className="flex-1 overflow-y-scroll p-2 mb-2 bg-white rounded-md"
@@ -119,7 +165,7 @@ const ChatWebsocket: React.FC<ChatWebsocketProps> = ({ endpoint }) => {
                       : 'bg-gray-300 text-gray-800'
                   }`}
                 >
-                  {renderMessageWithBold(log.message)}
+                  {renderMessageWithBoldUnderlineCodeAndBackticks (log.message)}
                 </p>
               </div>
             </div>

@@ -23,22 +23,37 @@ export default function UserProfile() {
 	const router = useRouter();
 	const { data } = useUser();
 
+	// const signout = () => {
+	// 	startSignOut(async () => {
+	// 		const supabase = createSupabaseBrowser();
+	// 		const {error} = await supabase.auth.signOut();
+
+	// 		if (error) {
+	// 			console.error('Error signing out:', error.message);
+	// 		  } else {
+	// 			// Clear local storage or cookies
+	// 			localStorage.removeItem('supabase.auth.token');
+	// 			document.cookie = 'supabase.auth.token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+	// 			router.push("/signin");
+	// 		  }
+	// 	});
+	// };
+
 	const signout = () => {
 		startSignOut(async () => {
-			const supabase = createSupabaseBrowser();
-			const {error} = await supabase.auth.signOut();
-
-			if (error) {
-				console.error('Error signing out:', error.message);
-			  } else {
-				// Clear local storage or cookies
-				localStorage.removeItem('supabase.auth.token');
-				document.cookie = 'supabase.auth.token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-				router.push("/signin");
-			  }
+		  const supabase = createSupabaseBrowser();
+		  await supabase.auth.signOut();
+	  
+		  // Remove the session from local storage
+		  localStorage.removeItem('supabase.auth.token');
+		  localStorage.removeItem('supabase.auth.refresh_token');
+	  
+		  // Push to sign-in and force a page reload
+		  router.push("/signin");
+		  router.refresh(); // Forces a page reload
 		});
-	};
-
+	  };
+	  
 
 
 	return (
