@@ -11,6 +11,7 @@ import InputFolderTree from '@/app/(root)/components/InputFolderTree';
 import ChatWebsocket from '@/app/(root)/components/ChatWebsocket';
 import OutputFolderTree from '@/app/(root)/components/OutputFolderTree';
 import { SendAgentRequest } from '@/lib/models/request';
+import DownloadCode from '@/app/(root)/components/DownloadFolder';
 
 interface ProjectPageProps {
   params: {
@@ -18,12 +19,18 @@ interface ProjectPageProps {
   };
 }
 
+
 const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   const { id } = params;
   const [project, setProject] = useState<SendAgentRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAgentRun, setIsAgentRun] = useState<boolean>(false);
+  const [isChatWindowsSelected, setChatWindowsSelected] = useState<boolean>(true);
+
+  const toggleSelection = (isChatWindows: boolean) =>{
+    setChatWindowsSelected(isChatWindows);
+  }
 
   const handleIsRunAgent = (show: boolean) => {
     setIsAgentRun(show);
@@ -93,8 +100,27 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
             <OutputFolderTree project={project} isAgentRun = {isAgentRun}/>
             </div>
             <div className="flex-2 justify-center p-5 lg:w-1/2">
+            <div className="flex justify-start mb-4">
+                        <button
+                            className={`px-4 py-2 rounded-md ${isChatWindowsSelected ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}
+                            onClick={() => toggleSelection(true)}
+                        >
+                            Chat Agent
+                        </button>
+                        <button
+                            className={`px-4 py-2 ml-2 rounded-md ${!isChatWindowsSelected? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}
+                            onClick={() => toggleSelection(false)}
+                        >
+                            Download Code
+                        </button>
+                    </div>
+              {isChatWindowsSelected ?(
               <ChatWebsocket endpoint="http://localhost:8000/agent/ws/chat"/>
-            </div>
+
+              ):(
+                <DownloadCode project={project}/>
+              )}    
+              </div>        
           </div>
 
         )}

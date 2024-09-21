@@ -35,22 +35,14 @@ const FolderUpload: React.FC<FolderUploadProps> = ({ onUploadComplete }) => {
         });
 
         try {
-            // const response = await fetch(`${BASE_URL}/agent/upload-folder`, {
-            //     method: 'POST',
-            //     body: formData,
-            // });
             await postData(formData, "agent/upload-folder");
 
-            // const result = await response.json();
-            // if (response.ok) {
             const firstFile = selectedFiles[0];
             const folderName = (firstFile as any).webkitRelativePath.split('/')[0];
             const entryPath = `${folderName}`;  
             onUploadComplete(entryPath, true);  // Notify parent component of the entry path
             setMessage('Folder uploaded successfully!');
-            // } else {
-                // setMessage(`Failed to upload folder: ${result.detail}`);
-            // }
+
         } catch (error: any) {
             setMessage(`Error: ${error.message}`);
         } finally {

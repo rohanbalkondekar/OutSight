@@ -1,12 +1,28 @@
 import axios from 'axios';
 import { getCurrentUser } from '@/lib/actions/index';
-import { AgentRequest } from '@/lib/models/request';
+import { SendAgentRequest } from '@/lib/models/request';
 import { headers } from 'next/headers';
 
 const API_BASE_URL = 'http://localhost:8000';
 
-// Function to create a new job
-export async function postData(Data: any, endpoint:string) {
+
+// export async function postData(Data: any, endpoint:string) {
+//   const { token } = await getCurrentUser();
+
+//   if (!token) {
+//     throw new Error('User not authenticated');
+//   }
+
+//   const response = await axios.post(`${API_BASE_URL}/${endpoint}/`, Data, {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   return response.data;
+// }
+
+export async function postData(Data: any, endpoint: string, isFileDownload = false) {
   const { token } = await getCurrentUser();
 
   if (!token) {
@@ -17,9 +33,11 @@ export async function postData(Data: any, endpoint:string) {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    responseType: isFileDownload ? 'blob' : 'json', // Handle blob for file download
   });
 
-  return response.data;
+  // If it's a file download, return the blob, otherwise return the JSON data
+  return isFileDownload ? response.data : response.data;
 }
 
 // Function to get jobs for the current user
@@ -110,7 +128,7 @@ export async function deleteData(endpoint:string) {
 // }
 
 
-export async function runAgent(agentData: AgentRequest) {
+export async function runAgent(agentData: SendAgentRequest) {
   const response = await postData(agentData, "agent/run_agent")
 
   return response.data
