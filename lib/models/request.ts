@@ -5,7 +5,7 @@ export interface AgentParams {
   rerun?: boolean;
 }
 
-export interface AgentRequest {
+export interface BaseAgentRequest {
   thread_id: string;
   document: AgentParams;
   planner: AgentParams;
@@ -17,4 +17,12 @@ export interface AgentRequest {
   legacy_framework: string;
   new_language: string;
   new_framework: string;
+  isRanAgent: boolean;
 }
+
+export interface CreateAgentRequest extends BaseAgentRequest{}
+
+export interface SendAgentRequest extends BaseAgentRequest{
+  id: number;
+}
+

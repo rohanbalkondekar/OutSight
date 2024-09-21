@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Project } from '../../../dashboard/page';
+// import { Project } from '../../../dashboard/page';
 import { getData } from '../../../api/apiMethod';
 import ProjectMigration from '../../../components/ProjectMigration';
 import Topbar from '@/app/(root)/components/Topbar';
@@ -10,6 +10,7 @@ import { getCurrentUser } from '@/lib/actions';
 import InputFolderTree from '@/app/(root)/components/InputFolderTree';
 import ChatWebsocket from '@/app/(root)/components/ChatWebsocket';
 import OutputFolderTree from '@/app/(root)/components/OutputFolderTree';
+import { SendAgentRequest } from '@/lib/models/request';
 
 interface ProjectPageProps {
   params: {
@@ -19,7 +20,7 @@ interface ProjectPageProps {
 
 const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   const { id } = params;
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<SendAgentRequest | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAgentRun, setIsAgentRun] = useState<boolean>(false);
@@ -27,6 +28,7 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   const handleIsRunAgent = (show: boolean) => {
     setIsAgentRun(show);
   }
+
 
   const router = useRouter();
   
@@ -39,7 +41,9 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
           return;
         }
       
-        const fetchedProject: Project = await getData(`database/${id}`, token);
+        const fetchedProject: SendAgentRequest = await getData(`database/${id}`, token);
+        console.log(fetchedProject)
+        setIsAgentRun(fetchedProject.isRanAgent);
         setProject(fetchedProject);
       } catch (err: any) {
         setError(`Error fetching project data: ${err.message}`);

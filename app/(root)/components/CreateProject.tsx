@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { postData } from '../api/apiMethod'; // Adjust the import based on your project structure
-import { AgentRequest } from '@/lib/models/request';
+import { CreateAgentRequest } from '@/lib/models/request';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/actions';
 
@@ -16,7 +16,7 @@ const frameworks = ["", "Express.js", "FastApi", "Django", "React", "Angular", "
 
 
 
-const initialState: AgentRequest = {
+const initialState: CreateAgentRequest = {
   thread_id: '',
   document: { model: { name: models[0] }, rerun: false },
   planner: { model: { name: models[0] }, rerun: false },
@@ -28,6 +28,7 @@ const initialState: AgentRequest = {
   legacy_framework: frameworks[0],
   new_language: languages[0],
   new_framework: frameworks[0],
+  isRanAgent: false
 };
 
 const setNestedProperty = <T,>(obj: T, path: string[], value: any): T => {
@@ -46,7 +47,7 @@ const setNestedProperty = <T,>(obj: T, path: string[], value: any): T => {
 };
 
 const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
-  const [formState, setFormState] = useState<AgentRequest>({
+  const [formState, setFormState] = useState<CreateAgentRequest>({
     ...initialState,
     entry_path: inputPath, // Set entry_path automatically from inputPath
   });

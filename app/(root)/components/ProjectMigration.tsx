@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { runAgent } from '../api/apiMethod';
-import { AgentRequest } from '@/lib/models/request';
+import { CreateAgentRequest, SendAgentRequest } from '@/lib/models/request';
 import { FaGithub } from 'react-icons/fa'; // Import GitHub icon
 
 const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]; // Add more models as needed
@@ -24,9 +24,14 @@ const setNestedProperty = (obj: any, path: string[], value: any) => {
 };
 
 
-const ProjectMigration: React.FC<{ project: AgentRequest, onHandleIsRunAgent: (show: boolean) => void }> = ({ project, onHandleIsRunAgent }) => {
-  const [formState, setFormState] = useState<AgentRequest>(project);
+const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent: (show:boolean)=> void}> = ({ project, onHandleIsRunAgent}) => {
+  const [formState, setFormState] = useState<SendAgentRequest>({
+    ...project, // Spread the properties of project into the initial state
+    isRanAgent: true, // Add or override isRanAgent property
+  });
   const [logs, setLogs] = useState<string[]>([]);
+
+  console.log(project)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -39,8 +44,12 @@ const ProjectMigration: React.FC<{ project: AgentRequest, onHandleIsRunAgent: (s
     });
   };
 
+
+  console.log(formState);
+
   const handleRunAgent = async () => {
     try {
+
       onHandleIsRunAgent(true);
       await runAgent(formState); 
     } catch (error: any) {

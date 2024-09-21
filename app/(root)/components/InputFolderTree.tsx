@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Tree, NodeApi } from 'react-arborist';
 import { getCurrentUser } from '@/lib/actions';
-import { AgentRequest } from '@/lib/models/request';
+import { SendAgentRequest } from '@/lib/models/request';
 
 interface TreeData {
     id: string;
@@ -10,7 +10,7 @@ interface TreeData {
     children?: TreeData[];
 }
 
-const InputFolderTree: React.FC<{ project: AgentRequest }> = ({ project }) => {
+const InputFolderTree: React.FC<{ project: SendAgentRequest }> = ({ project }) => {
     const [data, setData] = useState<TreeData[]>([]);
     const [selectedNode, setSelectedNode] = useState<TreeData | null>(null);
     const [message, setMessage] = useState<string>('');

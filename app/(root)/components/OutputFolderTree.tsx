@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import { Tree, NodeApi } from 'react-arborist';
 import { getCurrentUser } from '@/lib/actions';
-import { AgentRequest } from '@/lib/models/request';
+import { SendAgentRequest } from '@/lib/models/request';
 
 // Dynamically import the Monaco editor for client-side only rendering
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), { ssr: false });
@@ -14,7 +14,7 @@ interface TreeData {
     children?: TreeData[];
 }
 
-const OutputFolderTree: React.FC<{ project: AgentRequest , isAgentRun: boolean}> = ({ project , isAgentRun}) => {
+const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boolean}> = ({ project , isAgentRun}) => {
     const [data, setData] = useState<TreeData[]>([]);
     const [selectedNode, setSelectedNode] = useState<TreeData | null>(null);
     const [fileContent, setFileContent] = useState<string | null>(null);

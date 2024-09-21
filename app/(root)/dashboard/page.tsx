@@ -2,30 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { getData } from '../api/apiMethod';
-import { AgentParams } from '@/lib/models/request';
+import { AgentParams, SendAgentRequest } from '@/lib/models/request';
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/actions';
 import { redirect, useRouter } from 'next/navigation';
 import UserProfile from '@/components/auth/user-profile';
 import { FaPlus, FaGithub } from 'react-icons/fa'; // Add icons
 
-export interface Project {
-  id: number;
-  thread_id: string;
-  document: AgentParams;
-  planner: AgentParams;
-  migrate: AgentParams;
-  dir_struct: AgentParams;
-  entry_path: string;
-  output_path: string;
-  legacy_language: string;
-  legacy_framework: string;
-  new_language: string;
-  new_framework: string;
-}
 
 const Dashboard: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<SendAgentRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
