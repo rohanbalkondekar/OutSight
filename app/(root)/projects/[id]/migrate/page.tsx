@@ -12,6 +12,7 @@ import ChatWebsocket from '@/app/(root)/components/ChatWebsocket';
 import OutputFolderTree from '@/app/(root)/components/OutputFolderTree';
 import { SendAgentRequest } from '@/lib/models/request';
 import DownloadCode from '@/app/(root)/components/DownloadFolder';
+import GitPush from '@/app/(root)/components/GitPush';
 
 interface ProjectPageProps {
   params: {
@@ -118,7 +119,11 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
               <ChatWebsocket endpoint="http://localhost:8000/agent/ws/chat"/>
 
               ):(
-                <DownloadCode project={project}/>
+                <div>
+                  <GitPush project={project}/>
+                  <DownloadCode project={project}/>
+                </div>
+                
               )}    
               </div>        
           </div>
