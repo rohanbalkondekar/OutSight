@@ -20,7 +20,7 @@ const Topbar: React.FC<TopbarProps> = ({ links }) => {
   };
 
   return (
-    <nav className='w-full bg-gray-800 flex items-center justify-between p-4'>
+    <nav className='w-full bg-gray-800 flex items-center justify-between py-4 px-10'>
       {/* Hamburger Icon & Menu */}
       <div className='flex items-center'>
         {!isDropdownOpen && (

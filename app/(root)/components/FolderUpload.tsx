@@ -35,7 +35,7 @@ const FolderUpload: React.FC<FolderUploadProps> = ({ onUploadComplete }) => {
         });
 
         try {
-            await postData(formData, "agent/upload-folder");
+            await postData(formData, "file/upload-folder");
 
             const firstFile = selectedFiles[0];
             const folderName = (firstFile as any).webkitRelativePath.split('/')[0];

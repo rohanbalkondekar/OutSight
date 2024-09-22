@@ -59,7 +59,7 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
             try {
                 if(isAgentRun){
                 const { token } = await getCurrentUser();
-                ws.current = new WebSocket(`ws://localhost:8000/ws/output_folder?output_path=${project.output_path}&token=${token}`);
+                ws.current = new WebSocket(`ws://localhost:8000/tree/output_folder?output_path=${project.output_path}&token=${token}`);
 
                 // Handle WebSocket messages
                 ws.current.onmessage = (event: MessageEvent) => {

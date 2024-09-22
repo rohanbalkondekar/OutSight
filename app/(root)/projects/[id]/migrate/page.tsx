@@ -65,7 +65,7 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
   const topbarLinks = [
     { href: "/dashboard", label: 'Dashboard' },
     // { href: `/projects/${id}/setup`, label: 'Setup' },
-    { href: `/projects/${id}/migrate`, label: 'Code Migration' },
+    // { href: `/projects/${id}/migrate`, label: 'Code Migration' },
   ];
 
   if (loading) {

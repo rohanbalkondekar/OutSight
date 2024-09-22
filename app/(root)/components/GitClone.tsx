@@ -30,7 +30,7 @@ const GitUpload: React.FC<GitUploadProps> = ({ onInputPathChange }) => {
         setIsLoading(true);
         try {
             // Perform the API call to clone the repository
-            const result = await postData(formState, "agent/clone-repo");
+            const result = await postData(formState, "git/clone-repo");
 
             onInputPathChange(formState.repo_name, true);  // Set showCreateProject to true
             setMessage('Repository cloned successfully!');

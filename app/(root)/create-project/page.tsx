@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import CreateProject from '../components/CreateProject';
 import FolderUpload from '../components/FolderUpload';
-import GitUpload from '../components/GitUpload.tsx';
+import GitUpload from '../components/GitClone';
 
 const NewProjectPage: React.FC = () => {
     const [inputPath, setInputPath] = useState<string>('');

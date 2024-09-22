@@ -20,7 +20,7 @@ const InputFolderTree: React.FC<{ project: SendAgentRequest }> = ({ project }) =
         const connectWebSocket = async () => {
             try {
                 const { token } = await getCurrentUser();
-                ws.current = new WebSocket(`ws://localhost:8000/ws/tree_folder?input_path=${project.entry_path}&token=${token}`);
+                ws.current = new WebSocket(`ws://localhost:8000/tree/tree_folder?input_path=${project.entry_path}&token=${token}`);
 
                 // Handle WebSocket messages
                 ws.current.onmessage = (event: MessageEvent) => {
