@@ -1,15 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { runAgent } from '../api/apiMethod';
-import { CreateAgentRequest, SendAgentRequest } from '@/lib/models/request';
-import { FaGithub } from 'react-icons/fa'; // Import GitHub icon
-
-const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]; // Add more models as needed
-const languages = ["", "NodeJs","Python", "JavaScript", "TypeScript", "Java", "C#"];
-const frameworks = ["", "Express.js", "FastApi", "Django", "React", "Angular", "Spring", "ASP.NET"];
-
-
+import { SendAgentRequest } from '@/lib/models/request';
+import { frameworksByLanguage, languages, models } from '@/lib/constants/agentParameter';
 
 const setNestedProperty = (obj: any, path: string[], value: any) => {
   const lastKeyIndex = path.length - 1;
@@ -23,15 +17,20 @@ const setNestedProperty = (obj: any, path: string[], value: any) => {
   obj[path[lastKeyIndex]] = value;
 };
 
-
-const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent: (show:boolean)=> void}> = ({ project, onHandleIsRunAgent}) => {
+const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent: (show: boolean) => void }> = ({ project, onHandleIsRunAgent }) => {
   const [formState, setFormState] = useState<SendAgentRequest>({
-    ...project, // Spread the properties of project into the initial state
-    isRanAgent: true, // Add or override isRanAgent property
+    ...project,
+    isRanAgent: true,
   });
+  const [legacyFrameworkOptions, setLegacyFrameworkOptions] = useState<string[]>([]);
+  const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
 
-  console.log(project)
+  useEffect(() => {
+    // Initialize framework options based on the current legacy and new languages
+    setLegacyFrameworkOptions(frameworksByLanguage[formState.legacy_language] || []);
+    setNewFrameworkOptions(frameworksByLanguage[formState.new_language] || []);
+  }, [formState.legacy_language, formState.new_language]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -40,24 +39,30 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
     setFormState(prevState => {
       const updatedState = { ...prevState };
       setNestedProperty(updatedState, keys, value);
+
+      // Dynamically update frameworks when language is changed
+      if (name === 'legacy_language') {
+        setLegacyFrameworkOptions(frameworksByLanguage[value] || []);
+        updatedState.legacy_framework = ''; // Reset framework when language changes
+      } else if (name === 'new_language') {
+        setNewFrameworkOptions(frameworksByLanguage[value] || []);
+        updatedState.new_framework = ''; // Reset framework when language changes
+      }
+
       return updatedState;
     });
   };
 
-
-  console.log(formState);
-
   const handleRunAgent = async () => {
     try {
-
       onHandleIsRunAgent(true);
-      await runAgent(formState); 
+      await runAgent(formState);
     } catch (error: any) {
-      setLogs((prevLogs) => [...prevLogs, `Error running agent: ${error.message}`]);
+      setLogs(prevLogs => [...prevLogs, `Error running agent: ${error.message}`]);
     }
   };
 
-    const formFields = [
+  const formFields = [
     {
       label: 'Select Document Model',
       name: 'document.model.name',
@@ -91,7 +96,7 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
     {
       label: 'Legacy Framework',
       name: 'legacy_framework',
-      options: frameworks,
+      options: legacyFrameworkOptions,
       value: formState.legacy_framework,
     },
     {
@@ -103,39 +108,38 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
     {
       label: 'New Framework',
       name: 'new_framework',
-      options: frameworks,
+      options: newFrameworkOptions,
       value: formState.new_framework,
     },
   ];
 
-
   return (
-      <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
-        <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
-        
-        {formFields.map((field) => (
-          <div className="mb-4" key={field.name}>
-            <label className="block text-sm font-medium text-white">{field.label}</label>
-            <select
-              name={field.name}
-              value={field.value}
-              onChange={handleChange}
-              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
-            >
-              {field.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+    <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
+      <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
 
-        {/* Submit Button */}
-        <button onClick={handleRunAgent} className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition">
-          Run Agent
-        </button>
-      </div>
+      {formFields.map((field) => (
+        <div className="mb-4" key={field.name}>
+          <label className="block text-sm font-medium text-white">{field.label}</label>
+          <select
+            name={field.name}
+            value={field.value}
+            onChange={handleChange}
+            className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
+          >
+            {field.options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))}
+
+      {/* Submit Button */}
+      <button onClick={handleRunAgent} className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition">
+        Run Agent
+      </button>
+    </div>
   );
 };
 

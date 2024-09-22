@@ -1,20 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { postData } from '../api/apiMethod'; // Adjust the import based on your project structure
+import { postData } from '../api/apiMethod'; 
 import { CreateAgentRequest } from '@/lib/models/request';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/actions';
+import { frameworksByLanguage, languages, models } from '@/lib/constants/agentParameter';
 
 interface CreateProjectProps {
   inputPath: string;
 }
-
-const models = ["gpt-4o-mini", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"];
-const languages = ["", "NodeJs","Python", "JavaScript", "TypeScript", "Java", "C#"];
-const frameworks = ["", "Express.js", "FastApi", "Django", "React", "Angular", "Spring", "ASP.NET"];
-
-
 
 const initialState: CreateAgentRequest = {
   thread_id: '',
@@ -25,9 +20,9 @@ const initialState: CreateAgentRequest = {
   entry_path: '', 
   output_path: '', 
   legacy_language: languages[0],
-  legacy_framework: frameworks[0],
+  legacy_framework: "",
   new_language: languages[0],
-  new_framework: frameworks[0],
+  new_framework: "",
   isRanAgent: false
 };
 
@@ -49,8 +44,11 @@ const setNestedProperty = <T,>(obj: T, path: string[], value: any): T => {
 const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
   const [formState, setFormState] = useState<CreateAgentRequest>({
     ...initialState,
-    entry_path: inputPath, // Set entry_path automatically from inputPath
+    entry_path: inputPath,
   });
+
+  const [legacyFrameworkOptions, setLegacyFrameworkOptions] = useState<string[]>([]);
+  const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
 
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
@@ -74,6 +72,21 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
     const { name, value } = event.target;
     const keys = name.split('.');
     setFormState(prevState => setNestedProperty({ ...prevState }, keys, value));
+
+    // Update framework options when language changes
+    if (name === "legacy_language") {
+      setLegacyFrameworkOptions(frameworksByLanguage[value] || []);
+      setFormState((prevState) => ({
+        ...prevState,
+        legacy_framework: "",
+      }));
+    } else if (name === "new_language") {
+      setNewFrameworkOptions(frameworksByLanguage[value] || []);
+      setFormState((prevState) => ({
+        ...prevState,
+        new_framework: "",
+      }));
+    }
   };
 
   const handleCreateProject = async () => {
@@ -87,7 +100,6 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
     }
   };
 
-  // Configuration for the form fields
   const formFields = [
     {
       label: 'Select Document Model',
@@ -122,7 +134,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
     {
       label: 'Legacy Framework',
       name: 'legacy_framework',
-      options: frameworks,
+      options: legacyFrameworkOptions,
       value: formState.legacy_framework,
     },
     {
@@ -134,7 +146,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
     {
       label: 'New Framework',
       name: 'new_framework',
-      options: frameworks,
+      options: newFrameworkOptions,
       value: formState.new_framework,
     },
   ];

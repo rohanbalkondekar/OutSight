@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-// import { Project } from '../../../dashboard/page';
 import { getData } from '../../../api/apiMethod';
 import ProjectMigration from '../../../components/ProjectMigration';
 import Topbar from '@/app/(root)/components/Topbar';
@@ -51,7 +50,7 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
       
         const fetchedProject: SendAgentRequest = await getData(`database/${id}`, token);
         console.log(fetchedProject)
-        setIsAgentRun(fetchedProject.isRanAgent);
+        // setIsAgentRun(fetchedProject.isRanAgent);    //Comment out for development and testing only, not for production
         setProject(fetchedProject);
       } catch (err: any) {
         setError(`Error fetching project data: ${err.message}`);
