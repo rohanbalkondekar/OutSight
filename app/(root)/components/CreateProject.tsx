@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { postData } from '../api/apiMethod'; 
 import { CreateAgentRequest } from '@/lib/models/request';
-import { useRouter } from 'next/navigation';
+import { useRouter,} from 'next/navigation';
 import { getCurrentUser } from '@/lib/actions';
 import { frameworksByLanguage, languages, models } from '@/lib/constants/agentParameter';
 
 interface CreateProjectProps {
   inputPath: string;
+  index: string
 }
 
 const initialState: CreateAgentRequest = {
@@ -41,11 +42,15 @@ const setNestedProperty = <T,>(obj: T, path: string[], value: any): T => {
   return obj;
 };
 
-const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
+const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
+
   const [formState, setFormState] = useState<CreateAgentRequest>({
     ...initialState,
     entry_path: inputPath,
   });
+
+
+
 
   const [legacyFrameworkOptions, setLegacyFrameworkOptions] = useState<string[]>([]);
   const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
@@ -59,7 +64,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath }) => {
   
       setFormState(prevState => ({
         ...prevState,
-        thread_id: `${user!.id}-${Math.floor(Math.random() * 1000000)}`,
+        thread_id: `${index}`,
         entry_path: inputPath,
         output_path: inputPath
       }));

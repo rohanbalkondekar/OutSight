@@ -16,30 +16,44 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
 
 
-
-  const fetchProjects = async () => {
-    try {
-      const { user, token } = await getCurrentUser();
-
-      if (!user) {
-        redirect("/signin");
-      }
-
-      const data = await getData('database', token);
-      setProjects(data);
-    } catch (error: any) {
-      console.error(`Error fetching projects: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    let didCancel = false; // Avoid calling the API multiple times
+  
+    const fetchProjects = async () => {
+      try {
+        const { user, token } = await getCurrentUser();
+  
+        if (!user) {
+          redirect("/signin");
+          return;
+        }
+  
+        if (!didCancel) {
+          const data = await getData('database', token!);
+          setProjects(data);
+        }
+      } catch (error: any) {
+        console.error(`Error fetching projects: ${error.message}`);
+      } finally {
+        if (!didCancel) {
+          setLoading(false);
+        }
+      }
+    };
+  
     fetchProjects();
-  }, []);
+  
+    return () => {
+      didCancel = true; // Cleanup to avoid setting state if the component unmounts
+    };
+  }, []); // Empty dependency array ensures this only runs once
+  
 
   const handleNewProjectClick = () => {
-      router.push("/create-project")
+    const nextIndex = projects.length; // Next index based on the number of projects
+
+    // Manually construct the URL with the query parameter
+    router.push(`/create-project?index=${nextIndex + 1}`);
   };
 
   return (
@@ -70,7 +84,6 @@ const Dashboard: React.FC = () => {
           projects
           .slice()
           .map((project) => {
-            console.log(project)
               return(
             <Link
               key={project.id}

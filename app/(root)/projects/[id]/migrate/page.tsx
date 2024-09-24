@@ -48,7 +48,7 @@ const ProjectPage: React.FC<ProjectPageProps> = ({ params }) => {
           return;
         }
       
-        const fetchedProject: SendAgentRequest = await getData(`database/${id}`, token);
+        const fetchedProject: SendAgentRequest = await getData(`database/${id}`, token!);
         console.log(fetchedProject)
         // setIsAgentRun(fetchedProject.isRanAgent);    //Comment out for development and testing only, not for production
         setProject(fetchedProject);

@@ -40,24 +40,38 @@ export async function postData(Data: any, endpoint: string, isFileDownload = fal
   return isFileDownload ? response.data : response.data;
 }
 
-// Function to get jobs for the current user
-export async function getData(endpoint:string, token:any) {
-  // const { token } = await getCurrentUser();
 
+
+export async function getData(endpoint: string, token: string) {
   if (!token) {
     throw new Error('User not authenticated');
   }
 
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${endpoint}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    return response.data; // Adjust this according to the structure of your response
+  } catch (error: any) {
+    // Handle error cases like 401, 403, or network errors
+    if (error.response) {
+      // Server responded with a status other than 200 range
+      console.error(`Error: ${error.response.status} - ${error.response.data}`);
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error('Error: No response received from server');
+    } else {
+      // Something else went wrong
+      console.error('Error:', error.message);
+    }
 
-  const response = await axios.get(`${API_BASE_URL}/${endpoint}/`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return response.data;
+    throw new Error(`Failed to fetch data from ${endpoint}`);
+  }
 }
+
 
 export async function getDataFolder(endpoint: string, token: any, inputPath: string) {
   if (!token) {

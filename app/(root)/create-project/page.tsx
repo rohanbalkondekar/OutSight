@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import CreateProject from '../components/CreateProject';
 import FolderUpload from '../components/FolderUpload';
 import GitUpload from '../components/GitClone';
+import { useSearchParams } from 'next/navigation';
 
 const NewProjectPage: React.FC = () => {
     const [inputPath, setInputPath] = useState<string>('');
@@ -18,6 +19,12 @@ const NewProjectPage: React.FC = () => {
     const toggleSelection = (isGitHub: boolean) => {
         setIsGitHubSelected(isGitHub);
     };
+
+    const searchParams = useSearchParams();
+    const index = searchParams!.get('index');
+  
+    console.log(index)
+  
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -47,7 +54,7 @@ const NewProjectPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="w-full max-w-lg p-4">
-                    <CreateProject inputPath={inputPath} />
+                    <CreateProject inputPath={inputPath} index= {index!} />
                 </div>
             )}
         </div>
