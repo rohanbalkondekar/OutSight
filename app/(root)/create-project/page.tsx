@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import CreateProject from '../components/CreateProject';
 import FolderUpload from '../components/FolderUpload';
 import GitUpload from '../components/GitClone';
@@ -21,9 +21,9 @@ const NewProjectPage: React.FC = () => {
     };
 
     const searchParams = useSearchParams();
-    const index = searchParams!.get('index');
+    const index = searchParams?.get('index') || '0';
   
-    console.log(index)
+    
   
 
     return (
@@ -61,4 +61,12 @@ const NewProjectPage: React.FC = () => {
     );
 };
 
-export default NewProjectPage;
+// export default NewProjectPage;
+
+export default function Page() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <NewProjectPage />
+      </Suspense>
+    );
+  }

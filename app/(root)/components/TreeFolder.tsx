@@ -14,15 +14,22 @@ interface TreeData {
     children?: TreeData[];
 }
 
-const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boolean}> = ({ project , isAgentRun}) => {
+interface FolderTreeProps {
+    project: SendAgentRequest;
+    isAgentRun: boolean;
+    inputType: 'input' | 'output';
+}
+
+const TreeFolder: React.FC<FolderTreeProps> = ({ project, isAgentRun, inputType }) => {
     const [data, setData] = useState<TreeData[]>([]);
     const [selectedNode, setSelectedNode] = useState<TreeData | null>(null);
     const [fileContent, setFileContent] = useState<string | null>(null);
+    const [message, setMessage] = useState<string>('');
     const ws = useRef<WebSocket | null>(null);
 
     const getLanguageForFile = (fileName: string) => {
         const extension = fileName.split('.').pop();
-        switch (extension){
+        switch (extension) {
             case 'js':
                 return 'javascript';
             case 'ts':
@@ -38,37 +45,45 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
             case 'md':
                 return 'markdown';
             case 'c':
-                return 'c';          // C language
+                return 'c'; // C language
             case 'cpp':
             case 'cc':
             case 'cxx':
             case 'h':
             case 'hpp':
-                return 'cpp';        // C++ language
+                return 'cpp'; // C++ language
             case 'cs':
-                return 'csharp';     // C# language
+                return 'csharp'; // C# language
             case 'rs':
                 return 'rust';
             default:
                 return 'plaintext';
         }
-    }
+    };
 
     useEffect(() => {
         const connectWebSocket = async () => {
             try {
-                if(isAgentRun){
                 const { token } = await getCurrentUser();
-                ws.current = new WebSocket(`ws://localhost:8000/tree/output_folder?output_path=${project.output_path}&token=${token}`);
+
+                // Build pathParam and endpoint based on inputType and isAgentRun
+                const pathParam = isAgentRun
+                    ? `output_path=${project.output_path}`
+                    : `input_path=${project.entry_path}`;
+                const endpoint = isAgentRun ? "output_folder" : "input_folder";
+
+                // WebSocket connection URL
+                ws.current = new WebSocket(`ws://localhost:8000/tree/${endpoint}?${pathParam}&token=${token}`);
 
                 // Handle WebSocket messages
                 ws.current.onmessage = (event: MessageEvent) => {
                     const data = JSON.parse(event.data);
                     if (data.type === 'folder_structure') {
-                        setData([convertToTree(data.structure)]);
+                        setData([convertToTree(data.structure, `/${inputType}`)]);
                     } else if (data.type === 'file_content') {
-                        console.log(data.content)
                         setFileContent(data.content);
+                    } else if (data.type === 'success') {
+                        setMessage(data.message);
                     } else if (data.type === 'update') {
                         if (selectedNode && data.file_path === selectedNode.id) {
                             setFileContent(data.content);
@@ -77,15 +92,14 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
                 };
 
                 ws.current.onclose = () => {
-                    console.log('WebSocket closed');
+                    console.log(`${inputType} WebSocket closed`);
                 };
 
                 ws.current.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                }}
-                ;
+                    console.error(`${inputType} WebSocket error:`, error);
+                };
             } catch (error) {
-                console.error('Error setting up WebSocket:', error);
+                console.error(`Error setting up ${inputType} WebSocket:`, error);
             }
         };
 
@@ -93,19 +107,12 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
 
         // Clean up WebSocket on component unmount
         return () => {
-            if (ws.current) {
-                ws.current.close();
-            }
+            if (ws.current) ws.current.close();
         };
-    }, [project.output_path]);
+    }, [project.entry_path, project.output_path, isAgentRun, inputType]);
 
-    const convertToTree = (structure: any): TreeData => {
-        const convert = (
-            folderName: string,
-            folderContent: any,
-            path: string = '',
-            isRoot: boolean = false
-        ): TreeData => {
+    const convertToTree = (structure: any, rootName: string): TreeData => {
+        const convert = (folderName: string, folderContent: any, path: string = '', isRoot: boolean = false): TreeData => {
             const currentPath = isRoot ? '' : `${path}/${folderName}`;
             const children: TreeData[] = [];
 
@@ -123,14 +130,14 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
             }
 
             return {
-                id: currentPath || '/output',
-                name: isRoot ? '/output' : folderName || 'Unnamed Folder',
+                id: currentPath || rootName,
+                name: isRoot ? rootName : folderName || 'Unnamed Folder',
                 isOpen: isRoot,
                 children,
             };
         };
 
-        return convert('/output', structure || {}, '', true);
+        return convert(rootName, structure || {}, '', true);
     };
 
     const handleNodeSelect = (nodes: NodeApi<TreeData>[]) => {
@@ -163,31 +170,39 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
         }
     };
 
-    return (
-        <div className="text-white md:flex-row h-full pt-5 w-full px-5">
-            <div className="rounded-lg h-[500px]">
-            <MonacoEditor
-                height="100%"
-                defaultLanguage={selectedNode?.name ? getLanguageForFile(selectedNode.name) : 'python'}  // Default to 'plaintext' when no file is selected
-                value={fileContent || '### No file selected or file not found'}
-                onChange={handleEditorChange}
-                theme="vs-dark"
-                // options={{
-                //     minimap: { enabled: false},
-                // }}
-            />
+    const handleAddToGitignore = () => {
+        sendWebSocketMessage('add_to_gitignore');
+    };
 
-            </div>
-            {data.length > 0 ? (
+    const handleAddToGptignore = () => {
+        sendWebSocketMessage('add_to_gptignore');
+    };
+
+    const sendWebSocketMessage = (type: string) => {
+        if (selectedNode && ws.current) {
+            const message = {
+                type,
+                file_path: selectedNode.id,
+                input_path: project.entry_path,
+            };
+            ws.current.send(JSON.stringify(message));
+        }
+    };
+
+    return (
+        <div className="flex h-full w-full">    
+            {/* Folder Tree and Buttons on the Left */}
+            <div className="flex-1 flex flex-col justify-between text-white w-1/3">
+                {/* Folder Tree */}
                 <div className="overflow-auto rounded-lg pt-5">
-                <Tree<TreeData>
-                    data={data}
-                    width={600}
-                    height={400}
-                    onSelect={handleNodeSelect}
-                    indent={24}
-                    rowHeight={36}
-                >
+                    <Tree<TreeData>
+                        data={data}
+                        width={400}
+                        height={500}
+                        onSelect={handleNodeSelect}
+                        indent={24}
+                        rowHeight={36}
+                    >
                         {({ node, style, dragHandle }) => (
                             <div
                                 style={style}
@@ -202,13 +217,41 @@ const OutputFolderTree: React.FC<{ project: SendAgentRequest , isAgentRun: boole
                             </div>
                         )}
                     </Tree>
+
+                    {/* Buttons for .gitignore and .gptignore */}
+                    <div className="flex flex-row gap-2 mt-2">
+                        <button
+                            onClick={handleAddToGitignore}
+                            disabled={!selectedNode}
+                            className="bg-gray-700 text-white p-2 rounded-md"
+                        >
+                            Add to .gitignore
+                        </button>
+                        {!isAgentRun && (
+                            <button
+                                onClick={handleAddToGptignore}
+                                disabled={!selectedNode}
+                                className="bg-gray-700 text-white p-2 rounded-md"
+                            >
+                                Add to .gptignore
+                            </button>
+                        )}
+                    </div>
                 </div>
-            ) : (
-                <p>Loading...</p>
-            )}
+            </div>
+
+            {/* Monaco Editor for file editing on the Right */}
+            <div className="flex-2 h-screen w-2/3 rounded-lg mb-4 md:mb-0 md:mr-4">
+                <MonacoEditor
+                    height="100%"
+                    defaultLanguage={selectedNode?.name ? getLanguageForFile(selectedNode.name) : 'plaintext'}
+                    value={fileContent || '### No file selected or file not found'}
+                    onChange={handleEditorChange}
+                    theme="vs-dark"
+                />
+            </div>
         </div>
     );
-    
 };
 
-export default OutputFolderTree;
+export default TreeFolder;

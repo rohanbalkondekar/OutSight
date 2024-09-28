@@ -26,6 +26,9 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
   const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
 
+  
+  console.log(project.output_path)
+
   useEffect(() => {
     // Initialize framework options based on the current legacy and new languages
     setLegacyFrameworkOptions(frameworksByLanguage[formState.legacy_language] || []);

@@ -7,7 +7,7 @@ interface FolderUploadProps {
     onUploadComplete: (path: string, show: boolean) => void;
 }
 
-const FolderUpload: React.FC<FolderUploadProps> = ({ onUploadComplete }) => {
+const FolderUpload: React.FC<FolderUploadProps> = ({ onUploadComplete}) => {
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [message, setMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);

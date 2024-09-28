@@ -83,6 +83,7 @@ const Dashboard: React.FC = () => {
         ) : (
           projects
           .slice()
+          .reverse()
           .map((project) => {
               return(
             <Link
