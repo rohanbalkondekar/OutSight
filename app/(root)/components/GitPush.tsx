@@ -13,8 +13,8 @@ const GitPush: React.FC<GitPushProps> = ({ project }) => {
     const [formState, setFormState] = useState({
         username: '',
         token: '',
-        branch: 'migrated code', // Default branch
-        commit_message: '', // Default commit message
+        branch: 'migrated_code', // Default branch
+        commit_message: 'Code Migration powered by OutSight', // Default commit message
     });
 
     const [newLanguage] = useState(project.new_language); // Get new_language from project prop
@@ -62,7 +62,7 @@ const GitPush: React.FC<GitPushProps> = ({ project }) => {
     ];
 
     return (
-        <div className="w-full p-4 bg-gray-700 rounded-md shadow-md mb-5">
+        <div className="w-2/3 p-4 bg-gray-700 rounded-md shadow-md mb-5">
             <h2 className="text-xl font-bold mb-4 text-white">Push Changes to GitHub</h2>
             {inputFields.map((field) => (
                 <div className="mb-4" key={field.name}>
@@ -77,13 +77,15 @@ const GitPush: React.FC<GitPushProps> = ({ project }) => {
                     />
                 </div>
             ))}
-            <button
-                onClick={handleGitPush}
-                className={`bg-green-500 text-white py-2 px-4 rounded-md shadow-md transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-                disabled={isLoading} // Disable button while loading
-            >
-                {isLoading ? 'Pushing...' : 'Push Changes'}
-            </button>
+                <div className="flex justify-center">
+                    <button
+                        onClick={handleGitPush}
+                        className={`bg-green-600 text-white py-2 px-4 rounded-md shadow-md transition ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-600'}`}
+                        disabled={isLoading} // Disable button while loading
+                    >
+                        {isLoading ? 'Pushing...' : 'Push Changes'}
+                    </button>
+                </div>
             {message && <p className="mt-4 text-green-500">{message}</p>}
         </div>
     );

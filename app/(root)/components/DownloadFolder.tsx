@@ -28,7 +28,7 @@ const DownloadCode: React.FC<{project: SendAgentRequest}> = ({project}) => {
 
     return (
         <button onClick={downloadFile}
-        className='text-white bg-green-500 p-2 rounded-lg hover:bg-gray-600'
+        className='text-white bg-green-600 p-2 rounded-lg hover:bg-gray-600'
         >Download Migrated Code</button>
     );
 

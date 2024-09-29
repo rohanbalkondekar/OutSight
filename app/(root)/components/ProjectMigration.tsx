@@ -26,7 +26,7 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
   const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
   const [logs, setLogs] = useState<string[]>([]);
 
-  
+
   console.log(project.output_path)
 
   useEffect(() => {
@@ -117,29 +117,30 @@ const ProjectMigration: React.FC<{ project: SendAgentRequest, onHandleIsRunAgent
   ];
 
   return (
-    <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
-      <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
+    // <div className="max-h-[760px] overflow-auto rounded-lg bg-gray-800 p-6 shadow-lg text-white">
+    //   <h1 className="text-2xl font-bold mb-6">Code Migration AI Agent</h1>
 
-      {formFields.map((field) => (
-        <div className="mb-4" key={field.name}>
-          <label className="block text-sm font-medium text-white">{field.label}</label>
-          <select
-            name={field.name}
-            value={field.value}
-            onChange={handleChange}
-            className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
-          >
-            {field.options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-      ))}
+    //   {formFields.map((field) => (
+    //     <div className="mb-4" key={field.name}>
+    //       <label className="block text-sm font-medium text-white">{field.label}</label>
+    //       <select
+    //         name={field.name}
+    //         value={field.value}
+    //         onChange={handleChange}
+    //         className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
+    //       >
+    //         {field.options.map((option) => (
+    //           <option key={option} value={option}>
+    //             {option}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     </div>
+    //   ))}
 
+    <div className='p-8'>
       {/* Submit Button */}
-      <button onClick={handleRunAgent} className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition">
+      <button onClick={handleRunAgent} className="bg-green-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-gray-600 transition">
         Run Agent
       </button>
     </div>

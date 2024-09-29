@@ -241,10 +241,10 @@ const TreeFolder: React.FC<FolderTreeProps> = ({ project, isAgentRun, inputType 
             </div>
 
             {/* Monaco Editor for file editing on the Right */}
-            <div className="flex-2 h-screen w-2/3 rounded-lg mb-4 md:mb-0 md:mr-4">
+            <div className="flex-2 h-screen md:h-[600px] w-2/3 rounded-lg mb-4 md:mb-0 md:mr-4">
                 <MonacoEditor
                     height="100%"
-                    defaultLanguage={selectedNode?.name ? getLanguageForFile(selectedNode.name) : 'plaintext'}
+                    defaultLanguage={selectedNode?.name ? getLanguageForFile(selectedNode.name) : 'python'}
                     value={fileContent || '### No file selected or file not found'}
                     onChange={handleEditorChange}
                     theme="vs-dark"

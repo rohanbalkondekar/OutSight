@@ -3,13 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { postData } from '../api/apiMethod'; 
 import { CreateAgentRequest } from '@/lib/models/request';
-import { useRouter,} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/lib/actions';
 import { frameworksByLanguage, languages, models } from '@/lib/constants/agentParameter';
 
 interface CreateProjectProps {
   inputPath: string;
-  index: string
+  index: string;
 }
 
 const initialState: CreateAgentRequest = {
@@ -43,35 +43,31 @@ const setNestedProperty = <T,>(obj: T, path: string[], value: any): T => {
 };
 
 const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
-
   const [formState, setFormState] = useState<CreateAgentRequest>({
     ...initialState,
     entry_path: inputPath,
   });
 
-
-
-
   const [legacyFrameworkOptions, setLegacyFrameworkOptions] = useState<string[]>([]);
   const [newFrameworkOptions, setNewFrameworkOptions] = useState<string[]>([]);
-
   const [message, setMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state to prevent duplicate clicks
   const router = useRouter();
 
   useEffect(() => {
     const initializeFormState = async () => {
-      const {user} = await getCurrentUser();
+      const { user } = await getCurrentUser();
   
       setFormState(prevState => ({
         ...prevState,
         thread_id: `${index}`,
         entry_path: inputPath,
-        output_path: inputPath
+        output_path: inputPath,
       }));
     };
   
     initializeFormState();
-  }, [inputPath]);
+  }, [inputPath, index]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -95,6 +91,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
   };
 
   const handleCreateProject = async () => {
+    setIsLoading(true); // Set loading state to true when starting the request
     try {
       await postData(formState, "database");  // Adjust this based on your API structure
       setMessage("Project created successfully!");
@@ -102,6 +99,8 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
       router.push("/dashboard");
     } catch (error: any) {
       setMessage(`Error creating project: ${error.message}`);
+    } finally {
+      setIsLoading(false); // Set loading state to false when request is done
     }
   };
 
@@ -170,6 +169,7 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
               value={field.value}
               onChange={handleChange}
               className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md text-black p-2"
+              disabled={isLoading} // Disable form fields while loading
             >
               {field.options.map((option) => (
                 <option key={option} value={option}>
@@ -184,9 +184,10 @@ const CreateProject: React.FC<CreateProjectProps> = ({ inputPath, index}) => {
         <div className="flex justify-center">
           <button
             onClick={handleCreateProject}
-            className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition"
+            className={`bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isLoading} // Disable the button while loading
           >
-            Create Project
+            {isLoading ? 'Creating...' : 'Create Project'}
           </button>
         </div>
 
