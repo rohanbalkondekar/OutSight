@@ -11,27 +11,29 @@ const transition = {
 
 export const GoogleGeminiEffect = ({
   pathLengths,
-  title,
+  title_1,
+  title_2,
   description,
   className,
 }: {
   pathLengths: MotionValue[];
-  title?: string;
+  title_1?: string;
+  title_2?: string;
   description?: string;
   className?: string;
 }) => {
 
   const handleButtonClick = () => {
-    window.location.href = "https://forms.gle/9MsG8L9npLMtuqkD6";
+    window.location.href = "https://calendly.com/d/cqdk-5xg-3hk/call-with-founders";
   };
 
   return (
     <div className={cn("sticky top-80", className)}>
       <p className="text-4xl md:text-5xl font-bold pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
-        {title || `WE ARE BUILDING NEXT GENERATION`}
+        {title_1 || `WE ARE BUILDING NEXT GENERATION`}
       </p>
       <p className="text-4xl md:text-5xl font-bold pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
-        {title || `AI CONSULTANTS!`}
+        {title_2 || `AI CONSULTANTS!`}
       </p>
       <p className="text-xs md:text-xl font-normal text-center text-neutral-400 mt-4 max-w-lg mx-auto">
         {description ||
@@ -42,7 +44,7 @@ export const GoogleGeminiEffect = ({
           onClick={handleButtonClick}
           className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-32 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto "
         >
-          Sign me up!
+          Meet With Founders
         </button>
       </div>
       <svg

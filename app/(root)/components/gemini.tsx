@@ -29,6 +29,9 @@ export function GoogleGeminiEffectDemo() {
           pathLengthFourth,
           pathLengthFifth,
         ]}
+        title_1="AI Agents that migrate legacy code"
+        title_2 = "2x faster & 4x cheaper!"
+        description="Book a demo call with founders to explore your use case. (Your 10 minutes could save your devs 20+ hours each week.)"
       />
     </div>
   );
