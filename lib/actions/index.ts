@@ -1,11 +1,12 @@
 'use server';
 
-import createSupabaseServerClient from "../supabase/server";
+import createSupabaseServerClient from "@/lib/supabase/server";
 
 export default async function readUserSession(){
     const supabase = await createSupabaseServerClient();
 
     return supabase.auth.getSession();
+    // return supabase.auth.getUser()
 }
 
 
@@ -16,3 +17,5 @@ export async function getCurrentUser() {
     const token = session?.access_token || null;
     return { user, token };
 } 
+
+
