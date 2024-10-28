@@ -6,22 +6,6 @@ import { headers } from 'next/headers';
 const API_BASE_URL = 'http://localhost:8000';
 
 
-// export async function postData(Data: any, endpoint:string) {
-//   const { token } = await getCurrentUser();
-
-//   if (!token) {
-//     throw new Error('User not authenticated');
-//   }
-
-//   const response = await axios.post(`${API_BASE_URL}/${endpoint}/`, Data, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   return response.data;
-// }
-
 export async function postData(Data: any, endpoint: string, isFileDownload = false) {
   const { token } = await getCurrentUser();
 
